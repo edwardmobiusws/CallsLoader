@@ -147,7 +147,7 @@ public class App {
 			tt.start();			
 		}
 		// assistant help to deal with files not been proccessed because of disorder files incoming not by time.
-		new Thread(new Assistant(readyProcessHourQ, clContext)).start();
+		new Thread(new Assistant(readyProcessHourQ, clContext, feedingRecorder)).start();
 		
 	
         for (;;) {

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Assistant implements Runnable {
@@ -13,10 +14,12 @@ public class Assistant implements Runnable {
 	private LinkedBlockingQueue<String> readyProcessHourQ;
 	final private HashMap<String,Integer> filesGo = new HashMap<String,Integer>();
 	private int fileSize ;
+	private ConcurrentHashMap<String, Integer> feedingRecorder;
 	
-	public Assistant(LinkedBlockingQueue<String> readyProcessHourQ, CLContext clContext){
+	public Assistant(LinkedBlockingQueue<String> readyProcessHourQ, CLContext clContext, ConcurrentHashMap<String, Integer> feedingRecorder){
 		this.clContext = clContext;
 		this.readyProcessHourQ = readyProcessHourQ;
+		this.feedingRecorder = feedingRecorder;
 	}
 	
 	
@@ -64,6 +67,9 @@ public class Assistant implements Runnable {
 						for(String redStr : readyGo){
 							App.logger.info("~~~~~~~~~~~~~~~~~~~~~~~ assistant will offer hour "+ redStr+ "  to queue for  loading ~~~~~~~~~~~~~~~~~~~~~~~");
 							readyProcessHourQ.offer(redStr);
+							String hour = redStr.split("_")[0];
+							App.logger.info("~~~~~~~~~~~~~~~~~~~~~~~ assistant will delete " + hour +  " in feeding recorder ~~~~~~~~~~~~~~~~~~~~~~~");
+							feedingRecorder.remove(hour);
 						}
 						
 						filesGo.clear();
