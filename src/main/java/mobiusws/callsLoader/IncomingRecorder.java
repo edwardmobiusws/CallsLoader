@@ -51,8 +51,11 @@ public class IncomingRecorder implements Runnable {
 				String readyGoH = sdf.format(lastHour);	
 				
 				if(feedingRecorder.containsKey(readyGoH)){
-					readyProcessHourQ.offer(readyGoH + sperator + feedingRecorder.get(readyGoH));
+					Integer nb = feedingRecorder.get(readyGoH);
+					// other thread may added it first and removed it.
+					if(nb!=null)readyProcessHourQ.offer(readyGoH + sperator +nb );
 					feedingRecorder.remove(readyGoH);
+					
 				}
 				
 			}
